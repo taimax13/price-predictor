@@ -1,0 +1,6 @@
+MSSubClass,MSZoning,LotArea,LotConfig,BldgType,OverallCond,YearBuilt,YearRemodAdd,Exterior1st,BsmtFinSF2,TotalBsmtSF,SalePrice
+60,RL,8450,Inside,1Fam,5,2003,2003,VinylSd,0.0,856.0,208500.0
+20,RL,9600,FR2,1Fam,8,1976,1976,MetalSd,0.0,1262.0,181500.0
+60,RL,11250,Inside,1Fam,5,2001,2002,VinylSd,0.0,920.0,223500.0
+70,RL,9550,Corner,1Fam,5,1915,1970,Wd Sdng,0.0,756.0,140000.0
+60,RL,14260,FR2,1Fam,5,2000,2000,VinylSd,0.0,1145.0,250000.0
