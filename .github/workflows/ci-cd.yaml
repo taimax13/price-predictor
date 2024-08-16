@@ -3,7 +3,7 @@ name: CI/CD
 on:
   push:
     branches:
-      - master
+      - main
     tags:
       - '*'
 
@@ -11,7 +11,7 @@ jobs:
   train:
     name: Train Models
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/main'
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -28,7 +28,7 @@ jobs:
 
       - name: Run training script
         run: |
-          python -c "from modelHandler import ModelHandler; handler = ModelHandler('your_google_drive_id'); handler.load_and_preprocess_data(); handler.train_models(); handler.evaluate_models()"
+          python modelTrainer.py
 
   docker:
     name: Build and Push Docker Image
