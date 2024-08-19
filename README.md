@@ -52,7 +52,8 @@ This project is designed to predict property prices using various machine learni
     ```
    
 ### to test play with year to build and remodAdd to check up the prediction, in order to validate truthability there is a real data in first_5_rows.py
-```curl -X POST http://127.0.0.1:5000/predict \
+```
+curl -X POST http://127.0.0.1:5000/predict \
     -H "Content-Type: application/json" \
     -d '[
          {
