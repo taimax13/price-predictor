@@ -11,7 +11,7 @@ COPY . /app/
 
 # Run the training script
 # Ensure that your main function is correctly set up to be called
-RUN python modelTrainer.py
+#RUN python modelTrainer.py
 
 # Stage 2: Pack and Serve
 FROM python:3.8-slim AS pack-serving
