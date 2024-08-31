@@ -12,12 +12,13 @@ app = Flask(__name__)
 
 ###this api will get us product, based on popular influencer feedback
 @app.route('/popular-goods', methods=['GET'])
-def popular():
+def popular(file_path = None):
+    file_path = file_path or './data-sets/amazon_reviews.csv'
     models = {
         'LogisticsRegression': LogisticRegression(random_state=42, max_iter=1000),
         'GradientBooster': HistGradientBoostingClassifier(max_iter=100, random_state=42)
     }
-    trainer = ModelTrainer(models=models, file_path='./data-sets/amazon_reviews.csv')
+    trainer = ModelTrainer(models=models, file_path=file_path)
     trainer.load_and_preprocess_data()
     trainer.train_models()
     bp = trainer.best_performer()

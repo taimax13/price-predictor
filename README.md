@@ -116,3 +116,14 @@ curl http://127.0.0.1:5001/popular-goods
   {"itemName": 23988, "predicted_rating": 5.0, "vote": 166},
   {"itemName": 15129, "predicted_rating": 5.0, "vote": 122}
 ]
+
+
+### Running the Docker container with the file path:
+### When running the Docker container, pass the file path as an argument:
+
+```bash
+docker build -t my-model-trainer .
+docker run -v /path/to/your/local/data:/app/data-sets my-model-trainer python modelTrainer.py 
+```
+
+### PLEASE NOTE:: './data-sets/amazon_reviews.csv' - default path if not supplied, file should be place there
