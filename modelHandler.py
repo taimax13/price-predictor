@@ -5,7 +5,7 @@ from modelTrainer import ModelTrainer
 
 class ModelHandler:
     def __init__(self, url):
-        self.trainer = ModelTrainer(url)
+        self.trainer = ModelTrainer(url=url)
         self.trainer.load_and_preprocess_data()
         self.trainer.train_models()
         self.models = self.trainer.models
