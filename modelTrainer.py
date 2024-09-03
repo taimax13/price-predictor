@@ -88,7 +88,7 @@ class ModelTrainer:
         })
 
         # Step 6: Group by `itemName` to aggregate predicted ratings by product
-        grouped_recommendations = merged_recommendations.groupby('itemName').agg({
+        grouped_recommendations = merged_recommendations.groupby(['itemName','category']).agg({
             'predicted_rating': 'mean',  # Aggregate predicted ratings
             'vote': 'sum'  # Sum the number of votes
         }).reset_index()
