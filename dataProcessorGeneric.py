@@ -33,26 +33,16 @@ class DataProcessorGeneric:
     def clean_data(self):
         """Clean the dataset by handling missing values and encoding categorical features using Label Encoding."""
         self.monitor_memory()
-        # Drop rows with missing values
         self.dataset = self.dataset.dropna()
-
-        # Convert boolean columns to integers
         bool_cols = self.dataset.select_dtypes(include=['bool']).columns
         for col in bool_cols:
-            self.dataset[col] = self.dataset[col].astype(int)
-
-        # Identify categorical columns
+            self.dataset.loc[:,col] = self.dataset[col].astype(int)
         self.object_cols = [col for col in self.dataset.columns if self.dataset[col].dtype == 'object']
-
-        # Label encode categorical columns
         for col in self.object_cols:
             le = LabelEncoder()
-            self.dataset[col] = le.fit_transform(self.dataset[col])
-            self.label_encoders[col] = le  # Store the encoder
-
+            self.dataset.loc[:,col] = le.fit_transform(self.dataset[col])
+            self.label_encoders[col] = le
         self.df_final = self.dataset.copy()
-
-        # Print the first 5 rows with all columns
         print("First 5 rows of the cleaned dataset:")
         print(self.df_final.head(5))
 
@@ -106,17 +96,28 @@ class DataProcessorGeneric:
         """Decode the label encoded columns back to their original values."""
         decoded_df = encoded_df.copy()
         for col, le in self.label_encoders.items():
-            decoded_df[col] = le.inverse_transform(encoded_df[col])
+            if col in encoded_df.columns:
+                decoded_df[col] = le.inverse_transform(encoded_df[col])
+            else:
+                print(f"Warning: Column '{col}' not found in the DataFrame. Skipping decoding for this column.")
         return decoded_df
 
 
 def main():
     processor = DataProcessorGeneric(file_path='./data-sets/amazon_reviews.csv')
+
+    # Run the data processing steps
     processor.load_data()
     processor.explore_data()
     processor.clean_data()
+
+    # Save the cleaned data to a CSV file
     processor.save_clean_data()
+
+    # Example: Run a prediction (mocked here as just taking the first row)
     predicted_df = processor.df_final.head(5)
+
+    # Decode the columns back to their original values after prediction
     decoded_df = processor.decode_columns(predicted_df)
     print("Decoded DataFrame:")
     print(decoded_df)

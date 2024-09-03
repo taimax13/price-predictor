@@ -275,11 +275,11 @@ class DataVisualizer:
         #self.plot_price_deviation_anomalies()
 
 
-def main():
-    file_path = './data-sets/amazon_reviews.csv'
-    visualizer = DataVisualizer(file_path)
-    visualizer.run_all_visualizations()
-
-
-if __name__ == "__main__":
-    main()
+# def main():
+#     file_path = './data-sets/amazon_reviews.csv'
+#     visualizer = DataVisualizer(file_path)
+#     visualizer.run_all_visualizations()
+#
+#
+# if __name__ == "__main__":
+#     main()
