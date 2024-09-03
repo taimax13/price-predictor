@@ -28,8 +28,9 @@ def popular(file_path = None):
     result = top_5_recommendations.to_dict(orient='records')
 
     # Return the JSON response
-    return jsonify(result)
+    return jsonify({"best_model":bp, "prediction":result})
 #    return jsonify(top_5_recommendations.to_string(index=False))
+
 
 @app.route('/predict', methods=['POST'])
 def predict():
