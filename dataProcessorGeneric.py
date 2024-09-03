@@ -1,9 +1,8 @@
-import os
-import psutil
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder, StandardScaler
-import sys
 from sklearn.model_selection import train_test_split
+import psutil
+import sys
 
 class DataProcessorGeneric:
     def __init__(self, file_path=None, memory_threshold=85):
@@ -12,6 +11,7 @@ class DataProcessorGeneric:
         self.object_cols = None
         self.df_final = None
         self.memory_threshold = memory_threshold
+        self.label_encoders = {}  # Store LabelEncoders here
 
     def monitor_memory(self):
         """Check the current memory usage and terminate the process if it exceeds the threshold."""
@@ -36,15 +36,19 @@ class DataProcessorGeneric:
         # Drop rows with missing values
         self.dataset = self.dataset.dropna()
 
+        # Convert boolean columns to integers
+        bool_cols = self.dataset.select_dtypes(include=['bool']).columns
+        for col in bool_cols:
+            self.dataset[col] = self.dataset[col].astype(int)
+
         # Identify categorical columns
         self.object_cols = [col for col in self.dataset.columns if self.dataset[col].dtype == 'object']
 
         # Label encode categorical columns
-        label_encoders = {}
         for col in self.object_cols:
             le = LabelEncoder()
-            self.dataset.loc[:, col] = le.fit_transform(self.dataset[col])
-            label_encoders[col] = le
+            self.dataset[col] = le.fit_transform(self.dataset[col])
+            self.label_encoders[col] = le  # Store the encoder
 
         self.df_final = self.dataset.copy()
 
@@ -82,29 +86,40 @@ class DataProcessorGeneric:
         print("Numerical variables:", len(num_cols))
         self.monitor_memory()
 
-    def split_data(self, columns=['rating']):
-        #print(self.df_final['rating'])
-        self.features = self.df_final.drop(columns=columns)# Handle missing values, scaling, etc.
-        self.features.fillna(0, inplace=True)
+    def split_data(self, target_column='rating'):
+        """Split the dataset into training and testing sets."""
+        self.monitor_memory()
+        features = self.df_final.drop(columns=[target_column])
+        target = self.df_final[target_column]
+
+        # Handle missing values, scaling, etc.
+        features.fillna(0, inplace=True)
         scaler = StandardScaler()
-        self.features = scaler.fit_transform(self.features)
+        features = scaler.fit_transform(features)
 
         # Splitting data into training and testing sets
         return train_test_split(
-            self.features, self.df_final.get(columns), test_size=0.2, random_state=42
+            features, target, test_size=0.2, random_state=42
         )
+
+    def decode_columns(self, encoded_df):
+        """Decode the label encoded columns back to their original values."""
+        decoded_df = encoded_df.copy()
+        for col, le in self.label_encoders.items():
+            decoded_df[col] = le.inverse_transform(encoded_df[col])
+        return decoded_df
 
 
 def main():
     processor = DataProcessorGeneric(file_path='./data-sets/amazon_reviews.csv')
-
-    # Run the data processing steps
     processor.load_data()
     processor.explore_data()
     processor.clean_data()
-
-    # Save the cleaned data to a CSV file
     processor.save_clean_data()
+    predicted_df = processor.df_final.head(5)
+    decoded_df = processor.decode_columns(predicted_df)
+    print("Decoded DataFrame:")
+    print(decoded_df)
 
 
 if __name__ == '__main__':
