@@ -109,13 +109,38 @@ You can use the following cURL command to retrieve the top 5 most popular items:
 curl http://127.0.0.1:5001/popular-goods
 ```
 
-[
-  {"itemName": 30037, "predicted_rating": 5.0, "vote": 370},
-  {"itemName": 26393, "predicted_rating": 5.0, "vote": 287},
-  {"itemName": 40427, "predicted_rating": 5.0, "vote": 217},
-  {"itemName": 23988, "predicted_rating": 5.0, "vote": 166},
-  {"itemName": 15129, "predicted_rating": 5.0, "vote": 122}
-]
+{
+  "best_model": {
+    "GradientBooster": 1.1208531794059018
+  },
+  "prediction": [
+    {
+      "itemName": "Frontier Co-Op Organic Catnip Leaf &amp; Flower, Cut &amp; Sifted, 1 Pound Bulk Bag",
+      "predicted_rating": 5.0,
+      "vote": 370
+    },
+    {
+      "itemName": "Escape Proof Cat Harness with Leash Adjustable Soft Mesh - Best for Walking",
+      "predicted_rating": 5.0,
+      "vote": 287
+    },
+    {
+      "itemName": "Jitterbug Flip Easy-to-Use Cell Phone for Seniors (Red) by GreatCall",
+      "predicted_rating": 5.0,
+      "vote": 217
+    },
+    {
+      "itemName": "Drink Matcha Organic Green Tea Powder Set Bundle with Ceramic Tea Bowl, Handheld Electric Whisk and Bamboo Spoon, 16 oz.",
+      "predicted_rating": 5.0,
+      "vote": 166
+    },
+    {
+      "itemName": "CINNAMON SMARTCAKE: Gluten Free, Sugar Free and Starch Free (8 x 2-packs)",
+      "predicted_rating": 5.0,
+      "vote": 122
+    }
+  ]
+}
 
 
 ### Running the Docker container with the file path:

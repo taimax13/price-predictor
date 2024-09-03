@@ -79,19 +79,17 @@ class ModelTrainer:
         recommendations.reset_index(drop=True, inplace=True)
         self.df_final.reset_index(drop=True, inplace=True)
 
-        #  `self.df_final` contains the original product information
-        #merged_recommendations = pd.concat([self.df_final, recommendations['predicted_rating']], axis=1)
-        merged_recommendations = pd.DataFrame({'itemName': self.df_final['itemName'],'vote':self.df_final['vote'],'predicted_rating': recommendations['predicted_rating']})
-
-        # Save the result to a CSV file -my debug
-        #merged_recommendations.to_csv('predicted_candidate_decisions.csv', index=False)
+        # `self.df_final` contains the original product information
+        merged_recommendations = pd.DataFrame({
+            'itemName': self.df_final['itemName'],
+            'category': self.df_final['category'],
+            'vote': self.df_final['vote'],
+            'predicted_rating': recommendations['predicted_rating']
+        })
 
         # Step 6: Group by `itemName` to aggregate predicted ratings by product
-        grouped_recommendations = merged_recommendations.groupby('itemName').agg({
+        grouped_recommendations = merged_recommendations.groupby(['itemName','category']).agg({
             'predicted_rating': 'mean',  # Aggregate predicted ratings
-            #'userName': 'count',  # Optionally, count the number of ratings
-            #'verified': 'first',  # Keep other columns as they are (you can choose how to aggregate)
-            #'reviewText': 'first',
             'vote': 'sum'  # Sum the number of votes
         }).reset_index()
 
@@ -101,7 +99,10 @@ class ModelTrainer:
             ascending=[False, False]
         )
 
-        # Step 8: Return the top 5 products based on sorted DataFrame
+        # Step 8: Decode `itemName` back to its original values using `decode_columns`
+        sorted_recommendations = self.data_processor.decode_columns(sorted_recommendations)
+
+        # Step 9: Return the top 5 products based on sorted DataFrame
         top_5_products = sorted_recommendations.head(5)
 
         return top_5_products
